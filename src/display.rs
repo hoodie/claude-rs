@@ -25,7 +25,7 @@ impl fmt::Display for Currency {
         let decimal = format!("{:.2}", (self.1 as f32 / 100.0));
         match self.0 {
             Some(c) => write!(f, "{}{}", c, decimal),
-            None    => write!(f, "{}", decimal),
+            None => write!(f, "{}", decimal),
         }
     }
 }
@@ -49,4 +49,3 @@ impl fmt::LowerExp for Currency {
         write!(f, "{}", format!("{}", self).replace(".", ","))
     }
 }
-

@@ -1,4 +1,4 @@
-﻿//! This provides a simple type that encodes a currency.
+//! This provides a simple type that encodes a currency.
 
 #![deny(
     missing_docs,
@@ -14,6 +14,7 @@ extern crate regex;
 
 pub mod display;
 pub mod math;
+pub mod sum;
 
 
 /// Represents currency through an optional symbol and amount of coin.
@@ -102,3 +103,10 @@ impl Currency {
     }
 }
 
+use std::default::Default;
+
+impl Default for Currency{
+    fn default() -> Self{
+        Currency(None, 0)
+    }
+}

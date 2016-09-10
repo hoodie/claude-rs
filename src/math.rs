@@ -12,10 +12,12 @@ impl Add for Currency {
 
     #[inline]
     fn add(self, rhs: Currency) -> Currency {
-        if self.0 == rhs.0 {
-            Currency(self.0, self.1 + rhs.1)
+        if self.0 == rhs.0 || self.0.is_none() {
+            Currency(rhs.0, self.1 + rhs.1)
         } else {
-            panic!("Cannot add two different types of currency!");
+            panic!("Cannot add two different types of currency!\n{:?} vs {:?}",
+                   self.0,
+                   rhs.0);
         }
     }
 }

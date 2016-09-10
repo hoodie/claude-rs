@@ -8,15 +8,15 @@ fn taxes() {
     let a = Currency(Some('$'), 1000);
     let b = Currency(Some('$'), 1190);
 
-    fn foo(n:f64) -> i64{
-        (n*1000f64).abs() as i64
+    fn foo(n: f64) -> i64 {
+        (n * 1000f64).abs() as i64
     }
 
-    assert_eq!(1*foo(1.19), 1190);
-    assert_eq!(a*1.19, b);
-    assert_eq!(1.19*a, b);
-    assert_eq!(a*1.1901, b);
-    assert_eq!(1.1901*a, b);
+    assert_eq!(1 * foo(1.19), 1190);
+    assert_eq!(a * 1.19, b);
+    assert_eq!(1.19 * a, b);
+    assert_eq!(a * 1.1901, b);
+    assert_eq!(1.1901 * a, b);
 }
 
 #[test]
@@ -58,12 +58,10 @@ fn arithmetic_works() {
     let x = Currency(Some('$'), 1206);
     let y = Currency(Some('$'), 1143);
 
-    assert!(x + y == Currency(Some('$'), 2349)
-         && y + x == Currency(Some('$'), 2349));
+    assert!(x + y == Currency(Some('$'), 2349) && y + x == Currency(Some('$'), 2349));
     assert!(x - y == Currency(Some('$'), 63));
     assert!(y - x == Currency(Some('$'), -63));
-    assert!(x * 2 == Currency(Some('$'), 2412)
-         && 2 * x == Currency(Some('$'), 2412));
+    assert!(x * 2 == Currency(Some('$'), 2412) && 2 * x == Currency(Some('$'), 2412));
     assert!(x / 2 == Currency(Some('$'), 603));
 }
 
@@ -77,41 +75,41 @@ fn parse_works() {
     let b2 = Currency::from_string("$12");
     assert!(a2 == b2.unwrap());
 
-	let a3 = Currency(None, 1200099);
+    let a3 = Currency(None, 1200099);
     let b3 = Currency::from_string("12,000.99");
     assert!(a3 == b3.unwrap());
 
-	let a4 = Currency(Some('£'), 1200099);
+    let a4 = Currency(Some('£'), 1200099);
     let b4 = Currency::from_string("£12.000,99");
     assert!(a4 == b4.unwrap());
 
-	// Negatives
-	let a5 = Currency(Some('$'), -1210);
+    // Negatives
+    let a5 = Currency(Some('$'), -1210);
     let b5 = Currency::from_string("-$12.10");
-	println!("{:?}, {:?}", a1, b1);
+    println!("{:?}, {:?}", a1, b1);
     assert!(a5 == b5.unwrap());
 
     let a6 = Currency(Some('$'), -1200);
     let b6 = Currency::from_string("-$12");
     assert!(a6 == b6.unwrap());
 
-	let a7 = Currency(None, -1200099);
+    let a7 = Currency(None, -1200099);
     let b7 = Currency::from_string("-12,000.99");
     assert!(a7 == b7.unwrap());
 
-	let a8 = Currency(Some('£'), -1200099);
+    let a8 = Currency(Some('£'), -1200099);
     let b8 = Currency::from_string("-£12.000,99");
     assert!(a8 == b8.unwrap());
-    
+
     // Zeros
-	let a9 = Currency(Some('€'), 0);
+    let a9 = Currency(Some('€'), 0);
     let b9 = Currency::from_string("€0");
     assert!(a9 == b9.unwrap());
 
-	let a10 = Currency(None, 0);
+    let a10 = Currency(None, 0);
     let b10 = Currency::from_string("000");
     assert!(a10 == b10.unwrap());
-    
+
     let a11 = Currency(Some('€'), 50);
     let b11 = Currency::from_string("€0,50");
     assert!(a11 == b11.unwrap());
@@ -123,11 +121,23 @@ fn parse_works() {
 
 #[test]
 fn display_works() {
-	assert!(format!("{:?}", Currency(None, 10)) == "Currency(None, 10)");
+    assert!(format!("{:?}", Currency(None, 10)) == "Currency(None, 10)");
 
-	assert!(Currency(None, 1210).to_string() == "12.10");
+    assert!(Currency(None, 1210).to_string() == "12.10");
     assert!(Currency(Some('$'), 1210).to_string() == "$12.10");
     assert!(Currency(Some('$'), 100010).to_string() == "$1000.10");
 
-	assert!(format!("{:e}", Currency(Some('£'), 100000)) == "£1000,00");
+    assert!(format!("{:e}", Currency(Some('£'), 100000)) == "£1000,00");
+}
+
+
+#[test]
+fn default() {
+    assert_eq!(Currency::default(), Currency(None,0));
+}
+
+
+#[test]
+fn add_to_default() {
+    assert_eq!(Currency::default() + Currency(Some('€'),1), Currency(Some('€'),1));
 }
