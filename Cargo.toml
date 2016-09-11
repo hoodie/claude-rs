@@ -1,10 +1,10 @@
 [package]
-name = "currency"
-version = "0.3.0"
+name = "claude"
+version = "0.1.0"
 authors = ["tberry@student.neumont.edu", "hendrik@hoodie.de"]
-description = "A library written in Rust for representing Currencies."
-repository = "https://github.com/Tahler/rust-lang-currency"
-documentation = "http://tyborg.me/rust_docs/currency/currency/index.html"
+description = "A little library to represent money."
+repository = "https://github.com/hoodie/claude-rs"
+#documentation = "https://docs.rs/claude-rs"
 keywords = ["Currency", "Money"]
 license = "MPL-2.0"
 
