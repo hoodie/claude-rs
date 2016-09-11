@@ -10,10 +10,12 @@
     )]
 
 
+#[cfg(feature="parsing")]
 extern crate regex;
 
 pub mod display;
 pub mod math;
+#[cfg(feature="unstable")]
 pub mod sum;
 
 
@@ -55,6 +57,7 @@ impl Currency {
     /// assert!(Currency::from_string("£12,00") == Some(Currency(Some('£'), 1200)));
     /// assert!(Currency::from_string("¥12")    == Some(Currency(Some('¥'), 1200)));
     /// ```
+    #[cfg(feature="parsing")]
     pub fn from_string(s: &str) -> Option<Currency> {
         use regex::Regex;
 
