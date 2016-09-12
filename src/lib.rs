@@ -15,8 +15,14 @@ extern crate regex;
 
 pub mod display;
 pub mod math;
+
 #[cfg(feature="unstable")]
 pub mod sum;
+
+#[cfg(feature="tojson")]
+extern crate rustc_serialize;
+#[cfg(feature="tojson")]
+pub mod tojson;
 
 
 /// Represents currency through an optional symbol and amount of coin.
