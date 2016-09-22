@@ -1,29 +1,23 @@
 //! This provides a simple type that encodes a currency.
 
 #![deny(
-    missing_docs,
-    trivial_casts,
-    trivial_numeric_casts,
-    unstable_features,
-    unused_import_braces,
-    unused_qualifications
+//    missing_docs,
+//    trivial_casts,
+//    trivial_numeric_casts,
+//    unstable_features,
+//    unused_import_braces,
+//    unused_qualifications
     )]
 
+use std::default::Default;
 
-#[cfg(feature="parsing")]
-extern crate regex;
+#[cfg(feature="parsing")] extern crate regex;
+#[cfg(feature="unstable")] pub mod sum;
+#[cfg(feature="tojson")] extern crate rustc_serialize;
+#[cfg(feature="tojson")] pub mod tojson;
 
 pub mod display;
 pub mod math;
-
-#[cfg(feature="unstable")]
-pub mod sum;
-
-#[cfg(feature="tojson")]
-extern crate rustc_serialize;
-#[cfg(feature="tojson")]
-pub mod tojson;
-
 
 /// Represents currency through an optional symbol and amount of coin.
 ///
@@ -110,12 +104,33 @@ impl Currency {
         }
         None
     }
+
+    /// Returns an object that implements `Display` for different methods of printing currency.
+    pub fn postfix(&self) -> Postfix {
+        Postfix{currency: self}
+    }
+
+    /// Returns an object that implements `Display` for different methods of printing currency.
+    pub fn prefix(&self) -> Prefix {
+        Prefix{currency: self}
+    }
+
 }
 
-use std::default::Default;
 
 impl Default for Currency{
     fn default() -> Self{
         Currency(None, 0)
     }
 }
+
+/// Implements `Display` with the currency symbol at the end.
+pub struct Postfix<'a>{
+    currency: &'a Currency
+}
+
+/// Implements `Display` with the currency symbol at the end.
+pub struct Prefix<'a>{
+    currency: &'a Currency
+}
+
