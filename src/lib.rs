@@ -115,6 +115,27 @@ impl Currency {
         Prefix{currency: self}
     }
 
+    /// Returns the value as float
+    ///
+    /// # Warning, do not use this for calculation, this is for displaying only!
+    pub fn as_float(&self) -> f64{
+        self.1 as f64 / 100.0
+    }
+
+    /// Returns the inner value
+    pub fn value(&self) -> i64{
+        self.1
+    }
+
+}
+
+use std::ops::Deref;
+/// Required for `DerefMut`
+impl Deref for Currency{
+    type Target = i64;
+    fn deref(&self) -> &i64{
+        &self.1
+    }
 }
 
 
