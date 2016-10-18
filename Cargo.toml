@@ -1,18 +1,14 @@
 [package]
 name = "claude"
 version = "0.1.0"
-authors = ["tberry@student.neumont.edu", "hendrik@hoodie.de"]
+authors = ["hendrik@hoodie.de", "tberry@student.neumont.edu"]
 description = "A little library to represent money."
 repository = "https://github.com/hoodie/claude-rs"
-#documentation = "https://docs.rs/claude-rs"
-keywords = ["Currency", "Money"]
+keywords = ["Currency", "Money", "Monet"]
 license = "MPL-2.0"
 
 [dependencies]
 regex = { version = "0.1", optional = true }
-rustc-serialize = {version = "*", optional = true}
 
 [features]
 parsing = ["regex"]
-unstable = []
-tojson = ["rustc-serialize"]

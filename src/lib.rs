@@ -1,20 +1,15 @@
-//! This provides a simple type that encodes a currency.
+//! This provides a simple type to calculate with monetary values.
 
 #![deny(
-//    missing_docs,
-//    trivial_casts,
-//    trivial_numeric_casts,
-//    unstable_features,
-//    unused_import_braces,
-//    unused_qualifications
+    missing_docs,
+    trivial_casts,
+    trivial_numeric_casts,
+    unstable_features,
+    unused_import_braces,
+    unused_qualifications
     )]
 
 use std::default::Default;
-
-#[cfg(feature="parsing")] extern crate regex;
-#[cfg(feature="unstable")] pub mod sum;
-#[cfg(feature="tojson")] extern crate rustc_serialize;
-#[cfg(feature="tojson")] pub mod tojson;
 
 pub mod display;
 pub mod math;
@@ -31,7 +26,7 @@ impl Currency {
     ///
     /// # Examples
     /// ```
-    /// use currency::Currency;
+    /// use claude::Currency;
     ///
     /// let mut c = Currency::new();
     /// ```
@@ -49,7 +44,7 @@ impl Currency {
     ///
     /// # Examples
     /// ```
-    /// use currency::Currency;
+    /// use claude::Currency;
     ///
     /// assert!(Currency::from_string("$4.32")  == Some(Currency(Some('$'), 432)));
     /// assert!(Currency::from_string("-$4.32") == Some(Currency(Some('$'), -432)));
@@ -150,7 +145,7 @@ pub struct Postfix<'a>{
     currency: &'a Currency
 }
 
-/// Implements `Display` with the currency symbol at the end.
+/// Implements `Display` with the currency symbol at the front.
 pub struct Prefix<'a>{
     currency: &'a Currency
 }

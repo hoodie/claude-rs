@@ -20,16 +20,16 @@ macro_rules! impl_deref_to_currency{
 impl_deref_to_currency!(Postfix<'a>);
 impl_deref_to_currency!(Prefix<'a>);
 
-/// Allows Currencies to be displayed as Strings. The format includes no comma delimiting with a
-/// two digit precision decimal.
+/// Allows Currencies to be displayed as Strings.
+/// The format includes no comma delimiting with a two digit precision decimal.
 ///
 /// # Examples
 /// ```
-/// use currency::Currency;
+/// use claude::Currency;
 ///
-/// assert!(Currency(None, 1210).to_string() == "12,10");
+/// assert!(Currency(None, 1210).postfix().to_string() == "12,10");
 ///
-/// println!("{}", Currency(Some('€'), 100099));
+/// println!("{}", Currency(Some('€'), 100099).postfix());
 /// ```
 /// The last line prints the following:
 /// ```text
@@ -51,12 +51,12 @@ impl<'a> fmt::Display for Postfix<'a> {
 ///
 /// # Examples
 /// ```
-/// use currency::Currency;
+/// use claude::Currency;
 ///
-/// assert!(Currency(Some('$'), 1210).to_string() == "$12.10");
-/// assert!(Currency(None, 1210).to_string() == "12.10");
+/// assert!(Currency(Some('$'), 1210).prefix().to_string() == "$12.10");
+/// assert!(Currency(None, 1210).prefix().to_string() == "12.10");
 ///
-/// println!("{}", Currency(Some('$'), 100099));
+/// println!("{}", Currency(Some('$'), 100099).prefix());
 /// ```
 /// The last line prints the following:
 /// ```text
