@@ -47,6 +47,11 @@ impl Currency {
         Currency{symbol: None, value: 0}
     }
 
+    /// Initialize from `i64`
+    pub fn from_value(value: i64) -> Currency {
+        Currency{symbol: None, value: value}
+    }
+
     /// Uses a Regular Expression to parse a string literal (&str) and attempts to turn it into a
     /// currency. Returns `Some(Currency)` on a successful conversion, otherwise `None`.
     ///
@@ -134,6 +139,10 @@ impl Currency {
         self.value
     }
 
+    /// Returns the inner symbol
+    pub fn symbol(&self) -> Option<char>{
+        self.symbol
+    }
 }
 
 use std::ops::Deref;
@@ -145,6 +154,28 @@ impl Deref for Currency{
     }
 }
 
+impl From<i64> for Currency {
+    /// converts from a  `i64`
+    fn from(value:i64) -> Currency {
+        Currency::from_value(value)
+    }
+}
+
+impl From<(char,i64)> for Currency {
+    /// converts from a tuple of `char` and `i64`
+    fn from(tpl:(char, i64)) -> Currency {
+        let (symbol, cents) = tpl;
+        Currency{symbol: Some(symbol), value: cents}
+    }
+}
+
+impl From<(i64,char)> for Currency {
+    /// converts from a tuple of `i64` and `char`
+    fn from(tpl:(i64, char)) -> Currency {
+        let (cents, symbol) = tpl;
+        Currency{symbol: Some(symbol), value: cents}
+    }
+}
 
 impl Default for Currency{
     fn default() -> Self{
