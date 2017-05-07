@@ -17,16 +17,16 @@ mod tests {
     #[test]
     fn sum_up() {
         let list = vec![
-            Currency(Some('£'),1000),
-            Currency(Some('£'),0100),
-            Currency(Some('£'),0010),
-            Currency(Some('£'),0001),
+            Currency{symbol: Some('£'), value: 1000},
+            Currency{symbol: Some('£'), value: 0100},
+            Currency{symbol: Some('£'), value: 0010},
+            Currency{symbol: Some('£'), value: 0001},
         ];
 
         let fold = list.iter().fold(Currency::default(), |acc, x| acc + *x);
-        assert_eq!(fold, Currency(Some('£'),1111));
+        assert_eq!(fold, Currency{ symbol: Some('£'), value:1111});
 
         let sum:Currency = list.into_iter().sum();
-        assert_eq!(sum, Currency(Some('£'),1111));
+        assert_eq!(sum, Currency{ symbol: Some('£'), value:1111});
     }
 }

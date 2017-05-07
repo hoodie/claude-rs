@@ -1,6 +1,6 @@
 [package]
 name = "claude"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["hendrik@hoodie.de", "tberry@student.neumont.edu"]
 description = "A little library to represent money."
 repository = "https://github.com/hoodie/claude-rs"
@@ -10,5 +10,11 @@ license = "MPL-2.0"
 [dependencies]
 regex = { version = "0.1", optional = true }
 
+serde = { version = "1.0", optional = true }
+serde_json = { version = "1.0", optional = true }
+serde_derive = { version = "1.0", optional = true }
+
 [features]
+default = []
+serialization = ["serde", "serde_json", "serde_derive"]
 parsing = ["regex"]

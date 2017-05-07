@@ -3,7 +3,7 @@
 use std::fmt;
 use std::ops::Deref;
 
-use super::{Currency,Postfix, Prefix};
+use super::{Currency, Postfix, Prefix};
 
 macro_rules! impl_deref_to_currency{
     ($s:ty) => {
@@ -11,7 +11,7 @@ macro_rules! impl_deref_to_currency{
             type Target = Currency;
 
             fn deref(&self) -> &Currency {
-                &self.currency
+                &self.money
             }
         }
     }
@@ -27,9 +27,9 @@ impl_deref_to_currency!(Prefix<'a>);
 /// ```
 /// use claude::Currency;
 ///
-/// assert!(Currency(None, 1210).postfix().to_string() == "12,10");
+/// assert!(Currency{ symbol: None, value: 1210}.postfix().to_string() == "12,10");
 ///
-/// println!("{}", Currency(Some('€'), 100099).postfix());
+/// println!("{}", Currency{ symbol: Some('€'), value: 100099}.postfix());
 /// ```
 /// The last line prints the following:
 /// ```text
@@ -38,8 +38,8 @@ impl_deref_to_currency!(Prefix<'a>);
 impl<'a> fmt::Display for Postfix<'a> {
     #[inline]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let decimal = format!("{:.2}", (self.1 as f32 / 100.0)).replace(".", ",");
-        match self.0 {
+        let decimal = format!("{:.2}", (self.value as f32 / 100.0)).replace(".", ",");
+        match self.symbol {
             Some(symbol) => write!(f, "{d}{s}", s = symbol, d = decimal),
             None => write!(f, "{}", decimal),
         }
@@ -53,10 +53,10 @@ impl<'a> fmt::Display for Postfix<'a> {
 /// ```
 /// use claude::Currency;
 ///
-/// assert!(Currency(Some('$'), 1210).prefix().to_string() == "$12.10");
-/// assert!(Currency(None, 1210).prefix().to_string() == "12.10");
+/// assert!(Currency{ symbol: Some('$'), value: 1210}.prefix().to_string() == "$12.10");
+/// assert!(Currency{ symbol: None, value: 1210}.prefix().to_string() == "12.10");
 ///
-/// println!("{}", Currency(Some('$'), 100099).prefix());
+/// println!("{}", Currency{ symbol: Some('$'), value: 100099}.prefix());
 /// ```
 /// The last line prints the following:
 /// ```text
@@ -65,8 +65,8 @@ impl<'a> fmt::Display for Postfix<'a> {
 impl<'a> fmt::Display for Prefix<'a> {
     #[inline]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let decimal = format!("{:.2}", (self.1 as f32 / 100.0));
-        match self.0 {
+        let decimal = format!("{:.2}", (self.value as f32 / 100.0));
+        match self.symbol {
             Some(symbol) => write!(f, "{s}{d}", s = symbol, d = decimal),
             None => write!(f, "{}", decimal),
         }

@@ -3,7 +3,7 @@ extern crate claude;
 use claude::*;
 
 fn main(){
-    let my_money = Currency(Some('€'), 4711);
+    let my_money = Currency{symbol: Some('€'), value: 4711};
 
     println!("I have {:?}!", my_money);
     //println!("I have {}!", my_money); // doesn't compile :D

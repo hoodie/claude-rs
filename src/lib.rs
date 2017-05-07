@@ -9,6 +9,11 @@
     unused_qualifications
     )]
 
+#[cfg(feature="parsing")] extern crate regex;
+#[cfg(feature="serialization")] extern crate serde;
+#[cfg(feature="serialization")] extern crate serde_json;
+#[cfg(feature="serialization")] #[macro_use] extern crate serde_derive;
+
 use std::default::Default;
 
 pub mod display;
@@ -19,20 +24,27 @@ pub mod math;
 /// Each 100 coins results in a banknote. (100 is formatted as 1.00)
 /// The currency will be formatted as such: `Currency(Some('$'), 432)` ==> "$4.32"
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd, Eq)]
-pub struct Currency(pub Option<char>, pub i64);
+#[cfg_attr(feature = "serialization", derive(Serialize))]
+pub struct Currency {
+    /// Currency symbol
+    ///
+    /// pick any of `€`, `£`, `$`, `¥` etc...
+    pub symbol: Option<char>,
+    /// value in the smallest possible unit
+    pub value: i64
+}
 
 impl Currency {
     /// Creates a blank Currency as Currency(None, 0)
     ///
     /// # Examples
     /// ```
-    /// use claude::Currency;
-    ///
+    /// # use claude::Currency;
     /// let mut c = Currency::new();
     /// ```
     #[inline]
     pub fn new() -> Currency {
-        Currency(None, 0)
+        Currency{symbol: None, value: 0}
     }
 
     /// Uses a Regular Expression to parse a string literal (&str) and attempts to turn it into a
@@ -46,11 +58,11 @@ impl Currency {
     /// ```
     /// use claude::Currency;
     ///
-    /// assert!(Currency::from_string("$4.32")  == Some(Currency(Some('$'), 432)));
-    /// assert!(Currency::from_string("-$4.32") == Some(Currency(Some('$'), -432)));
-    /// assert!(Currency::from_string("424.44") == Some(Currency(None, 42444)));
-    /// assert!(Currency::from_string("£12,00") == Some(Currency(Some('£'), 1200)));
-    /// assert!(Currency::from_string("¥12")    == Some(Currency(Some('¥'), 1200)));
+    /// assert!(Currency::from_string("$4.32")  == Some(Currency{symbol: Some('$'), value:   432}));
+    /// assert!(Currency::from_string("-$4.32") == Some(Currency{symbol: Some('$'), value:  -432}));
+    /// assert!(Currency::from_string("424.44") == Some(Currency{symbol: None,      value: 42444}));
+    /// assert!(Currency::from_string("£12,00") == Some(Currency{symbol: Some('£'), value:  1200}));
+    /// assert!(Currency::from_string("¥12")    == Some(Currency{symbol: Some('¥'), value:  1200}));
     /// ```
     #[cfg(feature="parsing")]
     pub fn from_string(s: &str) -> Option<Currency> {
@@ -95,31 +107,31 @@ impl Currency {
         }
 
         if let Ok(coin) = coin_str.parse::<i64>(){
-            return Some(Currency(sign, multiplier * coin));
+            return Some(Currency{symbol: sign, value: multiplier * coin});
         }
         None
     }
 
     /// Returns an object that implements `Display` for different methods of printing currency.
     pub fn postfix(&self) -> Postfix {
-        Postfix{currency: self}
+        Postfix{money: self}
     }
 
     /// Returns an object that implements `Display` for different methods of printing currency.
     pub fn prefix(&self) -> Prefix {
-        Prefix{currency: self}
+        Prefix{money: self}
     }
 
     /// Returns the value as float
     ///
     /// # Warning, do not use this for calculation, this is for displaying only!
     pub fn as_float(&self) -> f64{
-        self.1 as f64 / 100.0
+        self.value as f64 / 100.0
     }
 
     /// Returns the inner value
     pub fn value(&self) -> i64{
-        self.1
+        self.value
     }
 
 }
@@ -129,24 +141,24 @@ use std::ops::Deref;
 impl Deref for Currency{
     type Target = i64;
     fn deref(&self) -> &i64{
-        &self.1
+        &self.value
     }
 }
 
 
 impl Default for Currency{
     fn default() -> Self{
-        Currency(None, 0)
+        Currency{symbol: None, value: 0}
     }
 }
 
 /// Implements `Display` with the currency symbol at the end.
 pub struct Postfix<'a>{
-    currency: &'a Currency
+    money: &'a Currency
 }
 
 /// Implements `Display` with the currency symbol at the front.
 pub struct Prefix<'a>{
-    currency: &'a Currency
+    money: &'a Currency
 }
 
