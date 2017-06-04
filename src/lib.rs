@@ -16,6 +16,9 @@
 
 use std::default::Default;
 
+/// Symbol of a currency
+pub type Symbol = char;
+
 pub mod display;
 pub mod math;
 
@@ -29,7 +32,7 @@ pub struct Currency {
     /// Currency symbol
     ///
     /// pick any of `€`, `£`, `$`, `¥` etc...
-    pub symbol: Option<char>,
+    pub symbol: Option<Symbol>,
     /// value in the smallest possible unit
     pub value: i64
 }
@@ -55,7 +58,7 @@ impl Currency {
     /// Uses a Regular Expression to parse a string literal (&str) and attempts to turn it into a
     /// currency. Returns `Some(Currency)` on a successful conversion, otherwise `None`.
     ///
-    /// If the currency is intended to be a negative amount, ensure the '-' is the first character
+    /// If the currency is intended to be a negative amount, ensure the '-' is the first symbolacter
     /// in the string.
     /// The Regex recognizes European notation (€1,00)
     ///
@@ -85,7 +88,7 @@ impl Currency {
 
         // Used to negate the final result if the regex matches a negative
         let mut multiplier = 1;
-        let mut sign: Option<char> = None;
+        let mut sign: Option<Symbol> = None;
         let mut coin_str: String = "".to_string();
 
         // If anyone's looking at this and knows how to do this without a loop, fork this.
@@ -140,7 +143,7 @@ impl Currency {
     }
 
     /// Returns the inner symbol
-    pub fn symbol(&self) -> Option<char>{
+    pub fn symbol(&self) -> Option<Symbol>{
         self.symbol
     }
 }
@@ -161,17 +164,17 @@ impl From<i64> for Currency {
     }
 }
 
-impl From<(char,i64)> for Currency {
-    /// converts from a tuple of `char` and `i64`
-    fn from(tpl:(char, i64)) -> Currency {
+impl From<(Symbol,i64)> for Currency {
+    /// converts from a tuple of `symbol` and `i64`
+    fn from(tpl:(Symbol, i64)) -> Currency {
         let (symbol, cents) = tpl;
         Currency{symbol: Some(symbol), value: cents}
     }
 }
 
-impl From<(i64,char)> for Currency {
-    /// converts from a tuple of `i64` and `char`
-    fn from(tpl:(i64, char)) -> Currency {
+impl From<(i64,Symbol)> for Currency {
+    /// converts from a tuple of `i64` and `symbol`
+    fn from(tpl:(i64, Symbol)) -> Currency {
         let (cents, symbol) = tpl;
         Currency{symbol: Some(symbol), value: cents}
     }
