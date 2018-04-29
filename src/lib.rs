@@ -79,39 +79,31 @@ impl Currency {
         // Shadow s with a trimmed version
         let s = s.trim();
         let re =
-            Regex::new(r"(?:\b|(-)?)(\p{Sc})?((?:(?:\d{1,3}[\.,])+\d{3})|\d+)(?:[\.,](\d{2}))?\b")
+            Regex::new(r"^(?:\b|(-)?)(\p{Currency_Symbol})?((?:(?:\d{1,3}[\.,])+\d{3})|\d+)(?:[\.,](\d{2}))?\b$")
             .unwrap();
-
-        if !re.is_match(s) {
-            return None;
-        }
 
         // Used to negate the final result if the regex matches a negative
         let mut multiplier = 1;
         let mut sign: Option<Symbol> = None;
         let mut coin_str: String = "".to_string();
 
-        // If anyone's looking at this and knows how to do this without a loop, fork this.
-        for cap in re.captures_iter(s) {
-            if cap.at(0).unwrap_or("") != s {
-                return None;
-            }
-
-            if cap.at(1).is_some() {
-                multiplier = -1;
-            }
-
-            if cap.at(2).is_some() {
-                if multiplier < 0 {
-                    sign = Some(s.chars().skip(1).next().unwrap());
-                } else {
-                    sign = Some(s.chars().next().unwrap());
+        match re.captures(s) {
+            None => return None,
+            Some(caps) => {
+                if caps.at(1).is_some() {
+                    multiplier = -1;
                 }
-            }
-            coin_str = cap.at(3).unwrap().replace(".", "").replace(",", "")
-                     + cap.at(4).unwrap_or("00");
 
-            break;
+                if caps.at(2).is_some() {
+                    if multiplier < 0 {
+                        sign = Some(s.chars().skip(1).next().unwrap());
+                    } else {
+                        sign = Some(s.chars().next().unwrap());
+                    }
+                }
+                coin_str = caps.at(3).unwrap().replace(".", "").replace(",", "")
+                         + caps.at(4).unwrap_or("00");
+            }
         }
 
         if let Ok(coin) = coin_str.parse::<i64>(){
