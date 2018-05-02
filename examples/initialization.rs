@@ -11,7 +11,7 @@ fn display(my_money: Currency){
 }
 
 fn main() {
-    display(Currency::from((50)));
+    display(Currency::from(50));
     display(Currency::from((50, '€')));
     display(Currency::from(('$', 50)));
 }

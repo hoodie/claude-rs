@@ -18,3 +18,13 @@ serde_derive = { version = "1.0", optional = true }
 default = []
 serialization = ["serde", "serde_json", "serde_derive"]
 parsing = ["regex"]
+
+[[example]]
+name = "serialize"
+required-features = ["serialization"]
+
+[[example]]
+name = "display"
+
+[[example]]
+name = "initialization"
