@@ -85,24 +85,24 @@ impl Currency {
         // Used to negate the final result if the regex matches a negative
         let mut multiplier = 1;
         let mut sign: Option<Symbol> = None;
-        let mut coin_str: String = "".to_string();
+        let coin_str: String;
 
         match re.captures(s) {
             None => return None,
             Some(caps) => {
-                if caps.at(1).is_some() {
+                if caps.get(1).is_some() {
                     multiplier = -1;
                 }
 
-                if caps.at(2).is_some() {
+                if caps.get(2).is_some() {
                     if multiplier < 0 {
                         sign = Some(s.chars().skip(1).next().unwrap());
                     } else {
                         sign = Some(s.chars().next().unwrap());
                     }
                 }
-                coin_str = caps.at(3).unwrap().replace(".", "").replace(",", "")
-                         + caps.at(4).unwrap_or("00");
+                coin_str = caps.get(3).map(|m| m.as_str()).unwrap().replace(".", "").replace(",", "")
+                         + caps.get(4).map(|m| m.as_str()).unwrap_or("00");
             }
         }
 
