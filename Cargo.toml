@@ -8,7 +8,7 @@ keywords = ["Currency", "Money", "Monet"]
 license = "MPL-2.0"
 
 [dependencies]
-regex = { version = "1.0.0", optional = true }
+regex = { version = "1.1.6", optional = true }
 
 serde = { version = "1.0", optional = true }
 serde_json = { version = "1.0", optional = true }
