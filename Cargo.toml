@@ -1,6 +1,6 @@
 [package]
 name = "claude"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["hendrik@hoodie.de", "tberry@student.neumont.edu"]
 description = "A little library to represent money."
 repository = "https://github.com/hoodie/claude-rs"
