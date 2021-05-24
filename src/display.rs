@@ -5,7 +5,7 @@ use std::ops::Deref;
 
 use super::{Currency, Postfix, Prefix};
 
-macro_rules! impl_deref_to_currency{
+macro_rules! impl_deref_to_currency {
     ($s:ty) => {
         impl<'a> Deref for $s {
             type Target = Currency;
@@ -14,7 +14,7 @@ macro_rules! impl_deref_to_currency{
                 &self.money
             }
         }
-    }
+    };
 }
 
 impl_deref_to_currency!(Postfix<'a>);

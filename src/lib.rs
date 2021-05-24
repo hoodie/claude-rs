@@ -7,12 +7,17 @@
     unstable_features,
     unused_import_braces,
     unused_qualifications
-    )]
+)]
 
-#[cfg(feature="parsing")] extern crate regex;
-#[cfg(feature="serialization")] extern crate serde;
-#[cfg(feature="serialization")] extern crate serde_json;
-#[cfg(feature="serialization")] #[macro_use] extern crate serde_derive;
+#[cfg(feature = "parsing")]
+extern crate regex;
+#[cfg(feature = "serialization")]
+extern crate serde;
+#[cfg(feature = "serialization")]
+extern crate serde_json;
+#[cfg(feature = "serialization")]
+#[macro_use]
+extern crate serde_derive;
 
 use std::default::Default;
 
@@ -34,7 +39,7 @@ pub struct Currency {
     /// pick any of `€`, `£`, `$`, `¥` etc...
     pub symbol: Option<Symbol>,
     /// value in the smallest possible unit
-    pub value: i64
+    pub value: i64,
 }
 
 impl Currency {
@@ -47,12 +52,18 @@ impl Currency {
     /// ```
     #[inline]
     pub fn new() -> Currency {
-        Currency{symbol: None, value: 0}
+        Currency {
+            symbol: None,
+            value: 0,
+        }
     }
 
     /// Initialize from `i64`
     pub fn from_value(value: i64) -> Currency {
-        Currency{symbol: None, value}
+        Currency {
+            symbol: None,
+            value,
+        }
     }
 
     /// Uses a Regular Expression to parse a string literal (&str) and attempts to turn it into a
@@ -72,7 +83,7 @@ impl Currency {
     /// assert!(Currency::from_string("£12,00") == Some(Currency{symbol: Some('£'), value:  1200}));
     /// assert!(Currency::from_string("¥12")    == Some(Currency{symbol: Some('¥'), value:  1200}));
     /// ```
-    #[cfg(feature="parsing")]
+    #[cfg(feature = "parsing")]
     pub fn from_string(s: &str) -> Option<Currency> {
         use regex::Regex;
 
@@ -101,90 +112,106 @@ impl Currency {
                         sign = Some(s.chars().next().unwrap());
                     }
                 }
-                coin_str = caps.get(3).map(|m| m.as_str()).unwrap().replace(".", "").replace(",", "")
-                         + caps.get(4).map(|m| m.as_str()).unwrap_or("00");
+                coin_str = caps
+                    .get(3)
+                    .map(|m| m.as_str())
+                    .unwrap()
+                    .replace(".", "")
+                    .replace(",", "")
+                    + caps.get(4).map(|m| m.as_str()).unwrap_or("00");
             }
         }
 
-        if let Ok(coin) = coin_str.parse::<i64>(){
-            return Some(Currency{symbol: sign, value: multiplier * coin});
+        if let Ok(coin) = coin_str.parse::<i64>() {
+            return Some(Currency {
+                symbol: sign,
+                value: multiplier * coin,
+            });
         }
         None
     }
 
     /// Returns an object that implements `Display` for different methods of printing currency.
     pub fn postfix(&self) -> Postfix<'_> {
-        Postfix{money: self}
+        Postfix { money: self }
     }
 
     /// Returns an object that implements `Display` for different methods of printing currency.
     pub fn prefix(&self) -> Prefix<'_> {
-        Prefix{money: self}
+        Prefix { money: self }
     }
 
     /// Returns the value as float
     ///
     /// # Warning, do not use this for calculation, this is for displaying only!
-    pub fn as_float(&self) -> f64{
+    pub fn as_float(&self) -> f64 {
         self.value as f64 / 100.0
     }
 
     /// Returns the inner value
-    pub fn value(&self) -> i64{
+    pub fn value(&self) -> i64 {
         self.value
     }
 
     /// Returns the inner symbol
-    pub fn symbol(&self) -> Option<Symbol>{
+    pub fn symbol(&self) -> Option<Symbol> {
         self.symbol
     }
 }
 
 use std::ops::Deref;
 /// Required for `DerefMut`
-impl Deref for Currency{
+impl Deref for Currency {
     type Target = i64;
-    fn deref(&self) -> &i64{
+    fn deref(&self) -> &i64 {
         &self.value
     }
 }
 
 impl From<i64> for Currency {
     /// converts from a  `i64`
-    fn from(value:i64) -> Currency {
+    fn from(value: i64) -> Currency {
         Currency::from_value(value)
     }
 }
 
-impl From<(Symbol,i64)> for Currency {
+impl From<(Symbol, i64)> for Currency {
     /// converts from a tuple of `symbol` and `i64`
-    fn from(tpl:(Symbol, i64)) -> Currency {
+    fn from(tpl: (Symbol, i64)) -> Currency {
         let (symbol, cents) = tpl;
-        Currency{symbol: Some(symbol), value: cents}
+        Currency {
+            symbol: Some(symbol),
+            value: cents,
+        }
     }
 }
 
-impl From<(i64,Symbol)> for Currency {
+impl From<(i64, Symbol)> for Currency {
     /// converts from a tuple of `i64` and `symbol`
-    fn from(tpl:(i64, Symbol)) -> Currency {
+    fn from(tpl: (i64, Symbol)) -> Currency {
         let (cents, symbol) = tpl;
-        Currency{symbol: Some(symbol), value: cents}
+        Currency {
+            symbol: Some(symbol),
+            value: cents,
+        }
     }
 }
 
-impl Default for Currency{
-    fn default() -> Self{
-        Currency{symbol: None, value: 0}
+impl Default for Currency {
+    fn default() -> Self {
+        Currency {
+            symbol: None,
+            value: 0,
+        }
     }
 }
 
 /// Implements `Display` with the currency symbol at the end.
-pub struct Postfix<'a>{
-    money: &'a Currency
+pub struct Postfix<'a> {
+    money: &'a Currency,
 }
 
 /// Implements `Display` with the currency symbol at the front.
-pub struct Prefix<'a>{
-    money: &'a Currency
+pub struct Prefix<'a> {
+    money: &'a Currency,
 }
-

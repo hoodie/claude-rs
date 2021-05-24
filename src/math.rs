@@ -1,8 +1,7 @@
 //! Implementations of standard operators:  `Add`, `Sub`, `Mul`, `Div`
 
-use std::ops::{Add, Sub, Mul, Div};
 use crate::Currency;
-
+use std::ops::{Add, Div, Mul, Sub};
 
 /// Overloads the '+' operator for Currency objects.
 ///
@@ -14,11 +13,15 @@ impl Add for Currency {
     #[inline]
     fn add(self, rhs: Currency) -> Currency {
         if self.symbol == rhs.symbol || self.symbol.is_none() {
-            Currency{symbol: rhs.symbol, value: self.value + rhs.value}
+            Currency {
+                symbol: rhs.symbol,
+                value: self.value + rhs.value,
+            }
         } else {
-            panic!("Cannot add two different types of currency!\n{:?} vs {:?}",
-                   self.symbol,
-                   rhs.symbol);
+            panic!(
+                "Cannot add two different types of currency!\n{:?} vs {:?}",
+                self.symbol, rhs.symbol
+            );
         }
     }
 }
@@ -34,7 +37,10 @@ impl Sub for Currency {
     #[inline]
     fn sub(self, rhs: Currency) -> Currency {
         if self.symbol == rhs.symbol {
-            Currency{symbol: self.symbol, value: self.value - rhs.value}
+            Currency {
+                symbol: self.symbol,
+                value: self.value - rhs.value,
+            }
         } else {
             panic!("Cannot subtract two different types of currency!");
         }
@@ -49,7 +55,10 @@ impl Mul<i64> for Currency {
 
     #[inline]
     fn mul(self, rhs: i64) -> Currency {
-        Currency{symbol: self.symbol, value: self.value * rhs}
+        Currency {
+            symbol: self.symbol,
+            value: self.value * rhs,
+        }
     }
 }
 
@@ -62,7 +71,10 @@ impl Mul<Currency> for i64 {
 
     #[inline]
     fn mul(self, rhs: Currency) -> Currency {
-        Currency{symbol: rhs.symbol, value: rhs.value * self}
+        Currency {
+            symbol: rhs.symbol,
+            value: rhs.value * self,
+        }
     }
 }
 
@@ -72,7 +84,10 @@ impl Mul<f64> for Currency {
 
     #[inline]
     fn mul(self, rhs: f64) -> Currency {
-        Currency{symbol: self.symbol, value: (self.value as f64 * rhs).round() as i64}
+        Currency {
+            symbol: self.symbol,
+            value: (self.value as f64 * rhs).round() as i64,
+        }
     }
 }
 
@@ -93,6 +108,9 @@ impl Div<i64> for Currency {
 
     #[inline]
     fn div(self, rhs: i64) -> Currency {
-        Currency{symbol: self.symbol, value: self.value / rhs}
+        Currency {
+            symbol: self.symbol,
+            value: self.value / rhs,
+        }
     }
 }
