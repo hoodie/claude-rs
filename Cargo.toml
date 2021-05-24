@@ -6,6 +6,7 @@ description = "A little library to represent money."
 repository = "https://github.com/hoodie/claude-rs"
 keywords = ["Currency", "Money", "Monet"]
 license = "MPL-2.0"
+edition = "2018"
 
 [dependencies]
 regex = { version = "1", optional = true }

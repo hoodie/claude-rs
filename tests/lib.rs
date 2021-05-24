@@ -1,4 +1,4 @@
-extern crate claude;
+
 
 use claude::Currency;
 use std::cmp::Ordering;

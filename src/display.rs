@@ -37,7 +37,7 @@ impl_deref_to_currency!(Prefix<'a>);
 /// ```
 impl<'a> fmt::Display for Postfix<'a> {
     #[inline]
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let decimal = format!("{:.2}", (self.value as f32 / 100.0)).replace(".", ",");
         match self.symbol {
             Some(symbol) => write!(f, "{d}{s}", s = symbol, d = decimal),
@@ -64,7 +64,7 @@ impl<'a> fmt::Display for Postfix<'a> {
 /// ```
 impl<'a> fmt::Display for Prefix<'a> {
     #[inline]
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let decimal = format!("{:.2}", (self.value as f32 / 100.0));
         match self.symbol {
             Some(symbol) => write!(f, "{s}{d}", s = symbol, d = decimal),

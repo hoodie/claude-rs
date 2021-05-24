@@ -1,7 +1,8 @@
 //! Implementations of standard operators:  `Add`, `Sub`, `Mul`, `Div`
 
 use std::ops::{Add, Sub, Mul, Div};
-use ::Currency;
+use crate::Currency;
+
 
 /// Overloads the '+' operator for Currency objects.
 ///

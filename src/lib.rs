@@ -52,7 +52,7 @@ impl Currency {
 
     /// Initialize from `i64`
     pub fn from_value(value: i64) -> Currency {
-        Currency{symbol: None, value: value}
+        Currency{symbol: None, value}
     }
 
     /// Uses a Regular Expression to parse a string literal (&str) and attempts to turn it into a
@@ -113,12 +113,12 @@ impl Currency {
     }
 
     /// Returns an object that implements `Display` for different methods of printing currency.
-    pub fn postfix(&self) -> Postfix {
+    pub fn postfix(&self) -> Postfix<'_> {
         Postfix{money: self}
     }
 
     /// Returns an object that implements `Display` for different methods of printing currency.
-    pub fn prefix(&self) -> Prefix {
+    pub fn prefix(&self) -> Prefix<'_> {
         Prefix{money: self}
     }
 
