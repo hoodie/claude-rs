@@ -19,8 +19,6 @@ extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
 
-use std::default::Default;
-
 /// Symbol of a currency
 pub type Symbol = char;
 
@@ -31,7 +29,7 @@ pub mod math;
 ///
 /// Each 100 coins results in a banknote. (100 is formatted as 1.00)
 /// The currency will be formatted as such: `Currency(Some('$'), 432)` ==> "$4.32"
-#[derive(Copy, Clone, Debug, PartialEq, PartialOrd, Eq)]
+#[derive(Copy, Clone, Debug, Default, PartialEq, PartialOrd, Eq)]
 #[cfg_attr(feature = "serialization", derive(Serialize))]
 pub struct Currency {
     /// Currency symbol
@@ -52,10 +50,7 @@ impl Currency {
     /// ```
     #[inline]
     pub fn new() -> Currency {
-        Currency {
-            symbol: None,
-            value: 0,
-        }
+        Currency::default()
     }
 
     /// Initialize from `i64`
@@ -69,7 +64,7 @@ impl Currency {
     /// Uses a Regular Expression to parse a string literal (&str) and attempts to turn it into a
     /// currency. Returns `Some(Currency)` on a successful conversion, otherwise `None`.
     ///
-    /// If the currency is intended to be a negative amount, ensure the '-' is the first symbolacter
+    /// If the currency is intended to be a negative amount, ensure the '-' is the first symbol
     /// in the string.
     /// The Regex recognizes European notation (€1,00)
     ///
@@ -107,7 +102,7 @@ impl Currency {
 
                 if caps.get(2).is_some() {
                     if multiplier < 0 {
-                        sign = Some(s.chars().skip(1).next().unwrap());
+                        sign = Some(s.chars().nth(1).unwrap());
                     } else {
                         sign = Some(s.chars().next().unwrap());
                     }
@@ -116,8 +111,7 @@ impl Currency {
                     .get(3)
                     .map(|m| m.as_str())
                     .unwrap()
-                    .replace(".", "")
-                    .replace(",", "")
+                    .replace(['.', ','], "")
                     + caps.get(4).map(|m| m.as_str()).unwrap_or("00");
             }
         }
@@ -193,15 +187,6 @@ impl From<(i64, Symbol)> for Currency {
         Currency {
             symbol: Some(symbol),
             value: cents,
-        }
-    }
-}
-
-impl Default for Currency {
-    fn default() -> Self {
-        Currency {
-            symbol: None,
-            value: 0,
         }
     }
 }

@@ -16,7 +16,7 @@ fn taxes() {
         (n * 1000f64).abs() as i64
     }
 
-    assert_eq!(1 * foo(1.19), 1190);
+    assert_eq!(foo(1.19), 1190);
     assert_eq!(a * 1.19, b);
     assert_eq!(1.19 * a, b);
     assert_eq!(a * 1.1901, b);
