@@ -9,7 +9,7 @@ license = "MPL-2.0"
 edition = "2018"
 
 [dependencies]
-regex = { version = "1", optional = true }
+regex = { version = "1.10.4", optional = true }
 
 serde = { version = "1", optional = true }
 serde_json = { version = "1", optional = true }
