@@ -14,10 +14,12 @@ jobs:
       - name: Validate commit messages
         run: |
           git show-ref
-          curl -sSfL https://github.com/convco/convco/releases/latest/download/convco-ubuntu.zip | zcat > convco
+          curl -sSfL https://github.com/convco/convco/releases/download/v0.6.4/convco-ubuntu.zip -o convco-ubuntu.zip
+          echo "2d09c55e78d27925dababce6c12398c57dae8b05  convco-ubuntu.zip" | sha1sum -c
+          zcat convco-ubuntu.zip > convco
           chmod +x convco
           ./convco check ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
-          rm convco
+          rm convco convco-ubuntu.zip
 
   fmt:
     name: Rustfmt
