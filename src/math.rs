@@ -36,9 +36,9 @@ impl Sub for Currency {
 
     #[inline]
     fn sub(self, rhs: Currency) -> Currency {
-        if self.symbol == rhs.symbol {
+        if self.symbol == rhs.symbol || self.symbol.is_none() {
             Currency {
-                symbol: self.symbol,
+                symbol: rhs.symbol,
                 value: self.value - rhs.value,
             }
         } else {
@@ -112,5 +112,73 @@ impl Div<i64> for Currency {
             symbol: self.symbol,
             value: self.value / rhs,
         }
+    }
+}
+
+#[cfg(test)]
+mod test_arithmetic {
+    use crate::Currency;
+
+    fn dollars(value: i64) -> Currency {
+        Currency {
+            symbol: Some('$'),
+            value,
+        }
+    }
+
+    fn bare(value: i64) -> Currency {
+        Currency::from_value(value)
+    }
+
+    #[test]
+    fn sub_same_symbol() {
+        assert_eq!(dollars(100) - dollars(50), dollars(50));
+    }
+
+    #[test]
+    fn add_same_symbol() {
+        assert_eq!(dollars(100) + dollars(50), dollars(150));
+    }
+
+    #[test]
+    fn bare_lhs_adopts_rhs_symbol_on_add() {
+        assert_eq!(bare(100) + dollars(50), dollars(150));
+    }
+
+    #[test]
+    fn bare_lhs_adopts_rhs_symbol_on_sub() {
+        assert_eq!(bare(100) - dollars(50), dollars(50));
+    }
+
+    #[test]
+    #[should_panic]
+    fn symbolled_lhs_plus_bare_rhs_panics() {
+        let _ = dollars(100) + bare(50);
+    }
+
+    #[test]
+    #[should_panic]
+    fn symbolled_lhs_minus_bare_rhs_panics() {
+        let _ = dollars(100) - bare(50);
+    }
+
+    #[test]
+    #[should_panic]
+    fn mixed_symbols_add_panics() {
+        let euro = Currency {
+            symbol: Some('€'),
+            value: 100,
+        };
+        let _ = dollars(100) + euro;
+    }
+
+    #[test]
+    #[should_panic]
+    fn mixed_symbols_sub_panics() {
+        let euro = Currency {
+            symbol: Some('€'),
+            value: 100,
+        };
+        let _ = dollars(100) - euro;
     }
 }

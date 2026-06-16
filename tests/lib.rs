@@ -273,16 +273,24 @@ fn default() {
 }
 
 #[test]
-fn add_to_default() {
+fn add_two_defaults() {
+    assert_eq!(
+        Currency::default() + Currency::default(),
+        Currency::default()
+    );
+}
+
+#[test]
+fn add_default_to_symbolled() {
     assert_eq!(
         Currency::default()
             + Currency {
                 symbol: Some('€'),
-                value: 1
+                value: 1,
             },
         Currency {
             symbol: Some('€'),
-            value: 1
+            value: 1,
         }
     );
 }
