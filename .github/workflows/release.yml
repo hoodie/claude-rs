@@ -2,38 +2,43 @@ name: Release
 
 on:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Tag to release (e.g. v4.3.1)'
-        required: true
-        type: string
 
 jobs:
-  github-release:
-    name: Create GitHub Release
+  release:
+    name: Release & Publish
     runs-on: ubuntu-latest
+    environment: release
     permissions:
       contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag }}
+          ref: main
+          fetch-tags: true
+
+      - name: Get latest tag
+        id: tag
+        run: |
+          TAG=$(git describe --tags --abbrev=0)
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Validate tag matches Cargo.toml
+        run: |
+          CARGO_VERSION="v$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')"
+          TAG="${{ steps.tag.outputs.tag }}"
+          if [ "${CARGO_VERSION}" != "${TAG}" ]; then
+            echo "Error: Cargo.toml version (${CARGO_VERSION}) does not match latest tag (${TAG})"
+            echo "Did you forget to push your tag?"
+            exit 1
+          fi
+          echo "In sync: ${TAG}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.tag }}
+          tag_name: ${{ steps.tag.outputs.tag }}
           generate_release_notes: true
-
-  publish:
-    runs-on: ubuntu-latest
-    environment: release  # Optional: for enhanced security
-    permissions:
-      id-token: write     # Required for OIDC token exchange
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.tag }}
 
       - uses: rust-lang/crates-io-auth-action@v1
         id: auth
